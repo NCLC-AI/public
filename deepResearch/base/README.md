@@ -3,3 +3,8 @@ https://github.com/NCLC-AI/public](https://github.com/NCLC-AI/appsmit_deepResear
 
 # n8n workflow
 workflow.json
+
+# Supabase table schema
+table.csv
+
+!! You should set table name as deepResearch !!
