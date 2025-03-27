@@ -1,0 +1,7 @@
+"column_name","data_type","is_nullable","column_default"
+"id","uuid","NO","gen_random_uuid()"
+"created_at","timestamp with time zone","NO","now()"
+"objective","text","NO","null"
+"learnings","ARRAY","YES","null"
+"urls","ARRAY","YES","null"
+"report","text","YES","null"
