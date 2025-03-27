@@ -1,0 +1,2411 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "aichat",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -40,
+        0
+      ],
+      "id": "28d76f01-0122-4c27-810e-975ce960a0d3",
+      "name": "Webhook",
+      "webhookId": "2ed1cf6a-5324-4c03-a4b1-e4a042d189a6"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.state }}",
+                    "rightValue": "AI",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "0160f21e-fea7-45e2-9be2-f93f22da3430"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "AI"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8b394123-55a3-4cc1-bfc9-4c738bf0a43d",
+                    "leftValue": "={{ $json.state }}",
+                    "rightValue": "FEEDBACK",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "FEEDBACK"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "8f2c1594-1e70-4bda-8ab2-c6630c3898a9",
+                    "leftValue": "={{ $json.state }}",
+                    "rightValue": "RESEARCH",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "RESEARCH"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.2,
+      "position": [
+        440,
+        0
+      ],
+      "id": "3927e496-ac5e-4892-9c39-1efdd347fe4c",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.history }}",
+        "options": {
+          "systemMessage": "=You are a helpful assistant\nToday's Date: {{ $now }}\nAnswer Language: {{ $json.lang }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        820,
+        -820
+      ],
+      "id": "0c77cca9-495f-4509-aca1-2d2215a150c4",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o",
+          "mode": "list",
+          "cachedResultName": "gpt-4o"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        800,
+        -620
+      ],
+      "id": "230762ec-7c6b-4d62-af39-687c82d3d202",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "IIGfMxC3qrcsy5pa",
+          "name": "Public OpenAi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        980,
+        -600
+      ],
+      "id": "bdf7c962-6a30-4a4c-888c-7bbc17cfdef0",
+      "name": "SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "PVCMuUZrQgDb3qVH",
+          "name": "Public SerpAPI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1180,
+        -820
+      ],
+      "id": "c859feef-1462-4f86-a9c6-53fa0b60447c",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "o3-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        800,
+        -220
+      ],
+      "id": "05af29a6-000d-4122-ae0a-070677299a3e",
+      "name": "OpenAI Chat Model1",
+      "credentials": {
+        "openAiApi": {
+          "id": "IIGfMxC3qrcsy5pa",
+          "name": "Public OpenAi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "286e9e21-3e08-44a7-b1b7-9a9b4c8de8f8",
+              "name": "serpApiKey",
+              "value": "={{ $json.body.serpApiKey }}",
+              "type": "string"
+            },
+            {
+              "id": "65da6f42-1a41-49ba-93e0-8f3b8fef238c",
+              "name": "openAIapiKey",
+              "value": "={{ $json.body.openAIapiKey }}",
+              "type": "string"
+            },
+            {
+              "id": "c301d051-5c6f-4356-b90a-e25dacb2717f",
+              "name": "firecrawlApiKey",
+              "value": "={{ $json.body.firecrawlApiKey }}",
+              "type": "string"
+            },
+            {
+              "id": "b478dfeb-f668-4cf0-b868-33dfc65dce3d",
+              "name": "history",
+              "value": "={{ $json.body.history }}",
+              "type": "array"
+            },
+            {
+              "id": "e86078a1-744a-4350-aada-3917cbe17c73",
+              "name": "state",
+              "value": "={{ $json.body.state }}",
+              "type": "string"
+            },
+            {
+              "id": "8d8548b6-a461-45f5-ae01-2a844f6ec90a",
+              "name": "maxQuestions",
+              "value": "=4",
+              "type": "number"
+            },
+            {
+              "id": "67c46195-c476-4d5e-bd95-cda69c00de28",
+              "name": "maxSearchQuery",
+              "value": "={{ $json.body.maxSearchQuery }}",
+              "type": "number"
+            },
+            {
+              "id": "294ee539-5ba3-4e93-9e50-8f756f1efbd5",
+              "name": "breadth",
+              "value": "={{ $json.body.breadth }}",
+              "type": "number"
+            },
+            {
+              "id": "2413e8a1-8932-43ce-b5b5-ba0a98e6b61b",
+              "name": "depth",
+              "value": "={{ $json.body.depth }}",
+              "type": "number"
+            },
+            {
+              "id": "a64f3156-90b1-4759-8d04-8123b94000e3",
+              "name": "lang",
+              "value": "={{ $json.body.lang }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        180,
+        0
+      ],
+      "id": "2d3f06c1-6f22-4d1f-903d-772c928f99ce",
+      "name": "Set INPUT"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Given the following query from the user, ask some follow up questions to \nclarify the research direction. Return a maximum of {{ $json.maxQuestions }} questions, \nbut feel free to return less if the original query is clear:\n<query>\n{{ $json.history.last().prompt }}\n</query>",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an expert researcher. Today is {{ $now }}. Follow these instructions when responding:\n  - You may be asked to research subjects that is after your knowledge cutoff, assume the user is right when presented with news.\n  - The user is a highly experienced analyst, no need to simplify it, be as detailed as possible and make sure your response is correct.\n  - Be highly organized.\n  - Suggest solutions that I didn't think about.\n  - Be proactive and anticipate my needs.\n  - Treat me as an expert in all subject matter.\n  - Mistakes erode my trust, so be accurate and thorough.\n  - Provide detailed explanations, I'm comfortable with lots of detail.\n  - Value good arguments over authorities, the source is irrelevant.\n  - Consider new technologies and contrarian ideas, not just the conventional wisdom.\n  - You may use high levels of speculation or prediction, just flag it for me.\n  - Answer in {{ $json.lang }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        820,
+        -440
+      ],
+      "id": "b1f6ee2e-b645-45e8-b3e1-e066ef839918",
+      "name": "Feedback"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        1060,
+        -280
+      ],
+      "id": "5c091031-11cd-4d13-bbf9-cb52d68dc54c",
+      "name": "Auto-fixing Output Parser"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1000,
+        -120
+      ],
+      "id": "e86ea4ae-776b-498f-b0c1-deea747307ea",
+      "name": "OpenAI Chat Model2",
+      "credentials": {
+        "openAiApi": {
+          "id": "IIGfMxC3qrcsy5pa",
+          "name": "Public OpenAi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n\t\"type\": \"object\",\n\t\"properties\": {\n\t\t\"questions\": {\n\t\t\t\"type\": \"array\",\n\t\t\t\"items\": {\n\t\t\t\t\"type\": \"string\",\n                \"description\": \"Follow up questions to clarify the research direction, max of {numQuestions}\"\n\t\t\t}\n\t\t}\n\t}\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1220,
+        -120
+      ],
+      "id": "f7337497-4d34-4084-896e-0fcdf304633c",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        1600,
+        -440
+      ],
+      "id": "eba49c47-4a68-4abf-b506-acf921835380",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a0f59e62-79cf-43d1-81ce-60f143d9bea6",
+              "name": "learnings",
+              "value": "[]",
+              "type": "array"
+            },
+            {
+              "id": "730d3a9d-de30-4c7c-bf25-97ba5a296ecc",
+              "name": "visitedUrls",
+              "value": "[]",
+              "type": "array"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "include": "except",
+        "excludeFields": "history, state, maxQuestions, serpApiKey",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1140,
+        420
+      ],
+      "id": "ab53fb94-e225-40d3-990a-cf33f82ab760",
+      "name": "Init research params"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "o3-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        160,
+        1260
+      ],
+      "id": "2559dfb7-ad25-42b5-806a-c1d3c39d2a0f",
+      "name": "OpenAI Chat Model3",
+      "credentials": {
+        "openAiApi": {
+          "id": "IIGfMxC3qrcsy5pa",
+          "name": "Public OpenAi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        360,
+        1280
+      ],
+      "id": "7eb96d4d-dc60-4114-950f-a42a95fd5923",
+      "name": "Auto-fixing Output Parser1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        320,
+        1540
+      ],
+      "id": "10ebb1d2-f1dd-465f-8c3e-1910b546ab60",
+      "name": "OpenAI Chat Model4",
+      "credentials": {
+        "openAiApi": {
+          "id": "IIGfMxC3qrcsy5pa",
+          "name": "Public OpenAi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n\t\"type\": \"object\",\n\t\"properties\": {\n\t\t\"queries\": {\n\t\t\t\"type\": \"array\",\n            \"description\": \"List of SERP queries, max of {numQueries}\",\n\t\t\t\"items\": {\n\t\t\t\t\"type\": \"object\",\n                \"properties\": {\n                    \"query\": {\n                        \"type\": \"string\",\n                        \"description\": \"The SERP query\"\n                    },\n                    \"researchGoal\": {\n                        \"type\": \"string\",\n                        \"description\": \"First talk about the goal of the research that this query is meant to accomplish, then go deeper into how to advance the research once the results are found, mention additional research directions. Be as specific as possible, especially for additional research directions.\"\n                    }\n                }\n\t\t\t}\n\t\t}\n\t}\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        500,
+        1500
+      ],
+      "id": "23b67f09-0f24-4f55-954d-24b305b21a33",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Given the following prompt from the user, generate a list of SERP queries to research the topic. Return a maximum of {{ $json.breadth }} queries, but feel free to return less if the original prompt is clear. Make sure each query is unique and not similar to each other: \nnumQueries: {{ $json.breadth }}\n\n<prompt>{{ $json.query }}\n</prompt>\n\n{{ $json.learnings.isNotEmpty() ? `Here are some learnings from previous research, use them to generate more specific queries:\\n${$json.learnings.map(item => `- ${item}`).join('\\n')}` : \"\" }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an expert researcher. Today is {{ $now }}. Follow these instructions when responding:\n  - You may be asked to research subjects that is after your knowledge cutoff, assume the user is right when presented with news.\n  - The user is a highly experienced analyst, no need to simplify it, be as detailed as possible and make sure your response is correct.\n  - Be highly organized.\n  - Suggest solutions that I didn't think about.\n  - Be proactive and anticipate my needs.\n  - Treat me as an expert in all subject matter.\n  - Mistakes erode my trust, so be accurate and thorough.\n  - Provide detailed explanations, I'm comfortable with lots of detail.\n  - Value good arguments over authorities, the source is irrelevant.\n  - Consider new technologies and contrarian ideas, not just the conventional wisdom.\n  - You may use high levels of speculation or prediction, just flag it for me.\n  - Do not use double quote"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        180,
+        1060
+      ],
+      "id": "8e044394-f3ec-477f-9e04-27ff0a709bfd",
+      "name": "generateSerpQueries"
+    },
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "openAIapiKey"
+            },
+            {
+              "name": "firecrawlApiKey"
+            },
+            {
+              "name": "query"
+            },
+            {
+              "name": "maxSearchQuery",
+              "type": "number"
+            },
+            {
+              "name": "breadth",
+              "type": "number"
+            },
+            {
+              "name": "depth",
+              "type": "number"
+            },
+            {
+              "name": "learnings",
+              "type": "array"
+            },
+            {
+              "name": "visitedUrls",
+              "type": "array"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -40,
+        920
+      ],
+      "id": "ad1eb69f-10ec-4805-ae3e-0367469ec011",
+      "name": "DeepResearch"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "output.queries",
+        "options": {
+          "destinationFieldName": "serpQuery"
+        }
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        540,
+        1060
+      ],
+      "id": "a0563f68-2553-416f-836e-fa1c908cefff",
+      "name": "Split Out"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1000,
+        940
+      ],
+      "id": "0764b86c-9187-474c-9938-494c78533383",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.firecrawl.dev/v1/search",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"query\": \"{{ $json.serpQuery.query }}\",\n  \"limit\": {{ $json.maxSearchQuery }},\n  \"lang\": \"en\",\n  \"country\": \"us\",\n  \"timeout\": 15000,\n  \"scrapeOptions\": {\n    \"formats\": [\n      \"markdown\"\n    ]\n  }\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1360,
+        1020
+      ],
+      "id": "d35cbf08-dfc3-457d-89db-41ae6a4219fe",
+      "name": "Firecrawl",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "2QOyVTnAQcyOW9zX",
+          "name": "Public Firecrawl"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "={{ $workflow.id }}",
+          "mode": "id"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "openAIapiKey": "={{ $json.openAIapiKey }}",
+            "firecrawlApiKey": "={{ $json.firecrawlApiKey }}",
+            "breadth": "={{ $json.breadth }}",
+            "query": "={{ $json.query }}",
+            "depth": "={{ $json.depth }}",
+            "learnings": "={{ $json.learnings }}",
+            "visitedUrls": "={{ $json.visitedUrls }}",
+            "maxSearchQuery": "={{ $json.maxSearchQuery }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "openAIapiKey",
+              "displayName": "openAIapiKey",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "firecrawlApiKey",
+              "displayName": "firecrawlApiKey",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "maxSearchQuery",
+              "displayName": "maxSearchQuery",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "breadth",
+              "displayName": "breadth",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "depth",
+              "displayName": "depth",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number"
+            },
+            {
+              "id": "learnings",
+              "displayName": "learnings",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "array"
+            },
+            {
+              "id": "visitedUrls",
+              "displayName": "visitedUrls",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "array"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        1680,
+        400
+      ],
+      "id": "a9ecabd5-5748-4cee-8385-96c4285c6c9b",
+      "name": "Run DeepResearch"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineAll",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        720,
+        940
+      ],
+      "id": "1e74f9e2-52b8-4d66-a678-360fd596575f",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e6d4a78f-f171-4995-bfd5-5a380ae459a5",
+              "name": "breadth",
+              "value": "={{ ($json.breadth / 2).ceil() }}",
+              "type": "number"
+            },
+            {
+              "id": "25151960-3041-4965-a673-f4ba0a7d212c",
+              "name": "depth",
+              "value": "={{ $json.depth - 1 }}",
+              "type": "number"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1620,
+        1280
+      ],
+      "id": "680a30ed-69a5-44d8-94df-dddae0e177e5",
+      "name": "Update breadth and depth"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "o3-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2740,
+        1520
+      ],
+      "id": "fb4e85f2-3a15-4199-92b5-769bd0f53f45",
+      "name": "OpenAI Chat Model5",
+      "credentials": {
+        "openAiApi": {
+          "id": "IIGfMxC3qrcsy5pa",
+          "name": "Public OpenAi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Given the following contents from a SERP search for the query \n<query>\n{{ $json.serpQuery.query }}\n</query>,\nnumLearnings: 3\nnumFollowUpQuestions: {{ $json.breadth }}\ngenerate a list of learnings from the contents. Return a maximum of ${numLearnings} learnings, but feel free to return less if the contents are clear. Make sure each learning is unique and not similar to each other. The learnings should be concise and to the point, as detailed and information dense as possible. Make sure to include any entities like people, places, companies, products, things, etc in the learnings, as well as any exact metrics, numbers, or dates. The learnings will be used to research the topic further.\n\n<contents>\n{{ $json.searchResult.map(item => `<content>\\n${item.markdown.substring(0,100_000)}\\n</content>`).join('\\n') }}\n</contents>",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an expert researcher. Today is {{ $now }}. Follow these instructions when responding:\n  - You may be asked to research subjects that is after your knowledge cutoff, assume the user is right when presented with news.\n  - The user is a highly experienced analyst, no need to simplify it, be as detailed as possible and make sure your response is correct.\n  - Be highly organized.\n  - Suggest solutions that I didn't think about.\n  - Be proactive and anticipate my needs.\n  - Treat me as an expert in all subject matter.\n  - Mistakes erode my trust, so be accurate and thorough.\n  - Provide detailed explanations, I'm comfortable with lots of detail.\n  - Value good arguments over authorities, the source is irrelevant.\n  - Consider new technologies and contrarian ideas, not just the conventional wisdom.\n  - You may use high levels of speculation or prediction, just flag it for me."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        2740,
+        1280
+      ],
+      "id": "99fc4fca-c3cf-4ffe-a91f-e75e1fa7cc8a",
+      "name": "Generate Learnings & F/U Questions",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        2920,
+        1500
+      ],
+      "id": "25f99b7b-b795-4382-9f6e-2905cc45eecb",
+      "name": "Auto-fixing Output Parser2"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2880,
+        1720
+      ],
+      "id": "52df0329-c67a-4e7a-8d79-69f05c6c7d0e",
+      "name": "OpenAI Chat Model6",
+      "credentials": {
+        "openAiApi": {
+          "id": "IIGfMxC3qrcsy5pa",
+          "name": "Public OpenAi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n\t\"type\": \"object\",\n\t\"properties\": {\n\t\t\"learnings\": {\n\t\t\t\"type\": \"array\",\n            \"description\": \"List of learnings, max of {numLearnings}\",\n\t\t\t\"items\": {\n\t\t\t\t\"type\": \"string\"\n\t\t\t}\n\t\t},\n\t\t\"followUpQuestions\": {\n\t\t\t\"type\": \"array\",\n            \"description\": \"List of follow-up questions to research the topic further, max of {numFollowUpQuestions}\",\n\t\t\t\"items\": {\n\t\t\t\t\"type\": \"string\"\n\t\t\t}\n\t\t}\n\t}\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        3060,
+        1720
+      ],
+      "id": "d940d6f3-86b4-4151-912b-64523337f491",
+      "name": "Structured Output Parser2"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        2260,
+        1140
+      ],
+      "id": "7ad14aac-8b4e-42b3-ad12-a643d8b73550",
+      "name": "Merge1"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        1580,
+        1020
+      ],
+      "id": "1413e8a2-6aef-40e2-99a1-74d7174fc558",
+      "name": "Split Out1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "8f150f99-5359-4661-b4af-d6d7674159cc",
+              "name": "markdown",
+              "value": "={{ $json.markdown }}",
+              "type": "string"
+            },
+            {
+              "id": "a6feee57-ff19-4699-8399-3147eb77c7d4",
+              "name": "url",
+              "value": "={{ $json.url }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1800,
+        1020
+      ],
+      "id": "c5c094c7-59bb-475c-b52c-f265b94f47c9",
+      "name": "Set search result"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "searchResult",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        2020,
+        1020
+      ],
+      "id": "cfe6a495-63b1-4a8f-be79-b7754aa256ea",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7a9b383d-b435-43b2-a514-eb841c047a26",
+              "name": "visitedUrls",
+              "value": "={{ [...$json.visitedUrls, ...$json.searchResult.map(item => item.url)] }}",
+              "type": "array"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2480,
+        1140
+      ],
+      "id": "3b15257e-61dd-4225-a4d3-e9ff4dec6d64",
+      "name": "Update visitedUrls"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3703e943-9d88-4806-8504-3bcaffc03472",
+              "name": "learnings",
+              "value": "={{ [...$json.learnings, ...$json.output.learnings] }}",
+              "type": "array"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3520,
+        1160
+      ],
+      "id": "a44e6edc-08e9-41fd-bf3f-598ad8b38629",
+      "name": "Update learnings"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        3280,
+        1160
+      ],
+      "id": "436e5890-bd30-4069-a0aa-908b01844389",
+      "name": "Merge2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "262cc629-a2b3-4902-a885-406cd591fa97",
+              "leftValue": "={{ $json.depth }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        3740,
+        1160
+      ],
+      "id": "92ed0891-67a1-4347-a067-053341c4bca5",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "workflowId": {
+          "__rl": true,
+          "value": "={{ $workflow.id }}",
+          "mode": "id"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "breadth": "={{ $json.breadth }}",
+            "depth": "={{ $json.depth }}",
+            "openAIapiKey": "={{ $json.openAIapiKey }}",
+            "firecrawlApiKey": "={{ $json.firecrawlApiKey }}",
+            "query": "={{ $json.query }}",
+            "learnings": "={{ $json.learnings }}",
+            "visitedUrls": "={{ $json.visitedUrls }}",
+            "maxSearchQuery": "={{ $json.maxSearchQuery }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "openAIapiKey",
+              "displayName": "openAIapiKey",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "firecrawlApiKey",
+              "displayName": "firecrawlApiKey",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "maxSearchQuery",
+              "displayName": "maxSearchQuery",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "breadth",
+              "displayName": "breadth",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "depth",
+              "displayName": "depth",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            },
+            {
+              "id": "learnings",
+              "displayName": "learnings",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "array",
+              "removed": false
+            },
+            {
+              "id": "visitedUrls",
+              "displayName": "visitedUrls",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "array",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": true
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.executeWorkflow",
+      "typeVersion": 1.2,
+      "position": [
+        4340,
+        700
+      ],
+      "id": "38322c26-d6e6-420c-a33f-d8e8e63c7586",
+      "name": "Run DeepResearch recursively"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1e128945-b775-451a-95aa-dde00e9b05f0",
+              "name": "query",
+              "value": "=Previous research goal: {{ $json.serpQuery.researchGoal }}\nFollow-up research directions: {{ $json.output.followUpQuestions.map((q,index) => `Q${index+1}: ${q}`).join('\\n') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3960,
+        1040
+      ],
+      "id": "aafabbde-ce1c-43cb-b175-7f6f40882a5d",
+      "name": "Set next query"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "45daf3f2-691d-4fd7-9482-32f9fc8bbb30",
+              "name": "learnings",
+              "value": "={{ $json.learnings }}",
+              "type": "array"
+            },
+            {
+              "id": "46647ce9-026b-4c53-ab26-462125552647",
+              "name": "visitedUrls",
+              "value": "={{ $json.visitedUrls }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3960,
+        1260
+      ],
+      "id": "05d3f1f9-23b4-4b6b-96b2-ebe9cefa3023",
+      "name": "Set research output"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "learnings"
+            },
+            {
+              "fieldToAggregate": "visitedUrls"
+            }
+          ]
+        },
+        "options": {
+          "mergeLists": true
+        }
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        1940,
+        400
+      ],
+      "id": "103ea0c1-b891-4abe-bf45-fad50b2b3ebb",
+      "name": "Aggregate1"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "o3-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2760,
+        500
+      ],
+      "id": "33546daf-4349-4735-8c3f-7c127ad21de2",
+      "name": "OpenAI Chat Model7",
+      "credentials": {
+        "openAiApi": {
+          "id": "IIGfMxC3qrcsy5pa",
+          "name": "Public OpenAi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        2300,
+        40
+      ],
+      "id": "b7c1c329-12ac-40eb-84b9-b52efd321254",
+      "name": "Merge3"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        2940,
+        440
+      ],
+      "id": "601508eb-1745-4aea-afd1-ef0bbaf78d6b",
+      "name": "Auto-fixing Output Parser3"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2920,
+        620
+      ],
+      "id": "9868f79d-46da-4a89-8e53-15fc0dd3bf4d",
+      "name": "OpenAI Chat Model8",
+      "credentials": {
+        "openAiApi": {
+          "id": "IIGfMxC3qrcsy5pa",
+          "name": "Public OpenAi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n\t\"type\": \"object\",\n\t\"properties\": {\n\t\t\"reportMarkdown\": {\n\t\t\t\"type\": \"string\",\n            \"description\": \"Final report on the topic in Markdown\"\n\t\t}\n\t}\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        3120,
+        600
+      ],
+      "id": "4ceaf007-530c-4934-9170-516cf00fbef5",
+      "name": "Structured Output Parser3"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Given the following prompt from the user, write a final report on the topic using the learnings from research. Make it as as detailed as possible, aim for 3 or more pages, include ALL the learnings from research:\n\n<prompt>\n{{ $json.query }}\n</prompt>\n\nHere are all the learnings from previous research:\n\n<learnings>\n{{ $json.learnings.map(learning => `<learning>\\n${learning}\\n</learning>`).join('\\n') }}\n</learnings>",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an expert researcher. Today is {{ $now }}. Follow these instructions when responding:\n  - You may be asked to research subjects that is after your knowledge cutoff, assume the user is right when presented with news.\n  - The user is a highly experienced analyst, no need to simplify it, be as detailed as possible and make sure your response is correct.\n  - Be highly organized.\n  - Suggest solutions that I didn't think about.\n  - Be proactive and anticipate my needs.\n  - Treat me as an expert in all subject matter.\n  - Mistakes erode my trust, so be accurate and thorough.\n  - Provide detailed explanations, I'm comfortable with lots of detail.\n  - Value good arguments over authorities, the source is irrelevant.\n  - Consider new technologies and contrarian ideas, not just the conventional wisdom.\n  - You may use high levels of speculation or prediction, just flag it for me.\n  - Answer in {{ $json.lang }}"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        2820,
+        220
+      ],
+      "id": "3094df6a-32b3-4798-a31e-40755f976259",
+      "name": "writeFinalReport"
+    },
+    {
+      "parameters": {
+        "mode": "markdownToHtml",
+        "markdown": "={{ $json.output.reportMarkdown }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.markdown",
+      "typeVersion": 1,
+      "position": [
+        3260,
+        220
+      ],
+      "id": "29810580-6157-4e31-a07c-097ce49e3950",
+      "name": "Markdown"
+    },
+    {
+      "parameters": {
+        "html": "<!DOCTYPE html>\n\n<html>\n<head>\n  <meta charset=\"UTF-8\" />\n  <title>My HTML document</title>\n</head>\n<body>\n{{ $json.data }}\n출처:<br/>\n  {{ $json.visitedUrls }}\n</body>\n</html>\n\n<style>\n.container {\n  background-color: #ffffff;\n  text-align: center;\n  padding: 16px;\n  border-radius: 8px;\n}\n\nh1 {\n  color: #ff6d5a;\n  font-size: 24px;\n  font-weight: bold;\n  padding: 8px;\n}\n\nh2 {\n  color: #909399;\n  font-size: 18px;\n  font-weight: bold;\n  padding: 8px;\n}\n</style>"
+      },
+      "type": "n8n-nodes-base.html",
+      "typeVersion": 1.2,
+      "position": [
+        3720,
+        -20
+      ],
+      "id": "059934f2-b2f6-484d-b2e3-342a1abc93b8",
+      "name": "HTML"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        3500,
+        60
+      ],
+      "id": "d509be4c-62d3-4a4e-ab3c-2b3f9345dd41",
+      "name": "Merge4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "06ab44fc-d85c-4144-8b9a-e8d7dba4617f",
+              "name": "visitedUrls",
+              "value": "={{ $json.visitedUrls.map(item => `<a href=${item} target=_blank>${item}</a><br/>`).join('\\n') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3080,
+        40
+      ],
+      "id": "9a6d3366-578e-4e41-b205-75fbb091f00e",
+      "name": "Set URLs to link"
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"id\": \"{{ $json.id }}\",\n  \"output\": {{ JSON.stringify($json.objective.replaceAll('\\n','<br/>')) }}\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        2000,
+        -320
+      ],
+      "id": "11a1ccd4-1971-4ac6-9cdb-c367e2d7783d",
+      "name": "Respond to Webhook2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "0cb7a519-6a98-48ed-9480-6b3dd4b3b8d7",
+              "name": "output",
+              "value": "={{ $json.output.questions.map((item,index) => `Q${index+1}: ${item}`).join('<br/>') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1340,
+        -440
+      ],
+      "id": "3b1f43b1-4e09-463e-a96e-97ab109fcb17",
+      "name": "Set Feedback OUTPUT"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"title\": \"ResearchOutput\",\n  \"description\": \"This schema defines the output format for the research objective along with additional explanation. It includes the main objective, research scope, and analysis direction.\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"objective\": {\n      \"type\": \"string\",\n      \"description\": \"A clear and concise objective statement outlining the overall research direction.\"\n    },\n    \"additional_explanation\": {\n      \"type\": \"object\",\n      \"description\": \"Supplementary details explaining the research scope and analysis direction.\",\n      \"properties\": {\n        \"research_scope\": {\n          \"type\": \"object\",\n          \"description\": \"Defines the parameters of the research scope.\",\n          \"properties\": {\n            \"time\": {\n              \"type\": \"string\",\n              \"description\": \"The time frame for the research.\"\n            },\n            \"subject\": {\n              \"type\": \"string\",\n              \"description\": \"The subject or topic of the research.\"\n            }\n          },\n          \"required\": [\"subject\"]\n        },\n        \"analysis_direction\": {\n          \"type\": \"array\",\n          \"description\": \"A list of key analysis directions or focal points for the research.\",\n          \"items\": {\n            \"type\": \"string\"\n          }\n        }\n      },\n      \"required\": [\"research_scope\", \"analysis_direction\"]\n    }\n  },\n  \"required\": [\"objective\", \"additional_explanation\"]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        1020,
+        260
+      ],
+      "id": "9d7c4c44-f9a2-48a8-acb7-2a63fed73a7e",
+      "name": "Structured Output Parser4"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "o3-mini",
+          "mode": "list",
+          "cachedResultName": "o3-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        780,
+        260
+      ],
+      "id": "9d6eadff-d534-433d-be18-12e7f134a292",
+      "name": "OpenAI Chat Model9",
+      "credentials": {
+        "openAiApi": {
+          "id": "IIGfMxC3qrcsy5pa",
+          "name": "Public OpenAi"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Initial Query: {{ $json.history.reverse()[2].prompt }}\nFollow-up Questions and Answers:\n{{ $json.history.reverse()[1].prompt }}\nA:\n{{ $json.history.last().prompt }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=[Combined System Prompt: Expert Deep Research Objective Definition]\n\nToday's Date: {{ $now }}\nAnswer Language: {{ $json.lang }}\n\nInstructions for the Expert Researcher:\n- You are a highly experienced analyst; provide detailed, accurate, and thorough responses.\n- Do not simplify your explanations—be as comprehensive as possible.\n- Organize your response in a highly structured manner.\n- Suggest innovative solutions and anticipate needs beyond what has been explicitly mentioned.\n- Treat every subject with expert-level analysis, considering both conventional wisdom and contrarian ideas.\n- Use high levels of speculation or prediction when necessary; clearly flag any speculative content.\n- When encountering subjects beyond your knowledge cutoff, assume the user’s information is correct.\n- Value well-reasoned arguments over merely citing authorities; the source of information is secondary.\n\nDeep Research Objective Process:\n\n1. Initial Query Identification\n   - Precisely determine the user's initial query (e.g., \"3-Year AI Trend Report\").\n   - Understand the report's scope, time frame, and subject matter.\n\n2. Analysis of Follow-up Questions and Answers\n   - Organize and review each follow-up question and its corresponding answer.\n   - Identify what each question is asking (e.g., major AI fields, application examples, specific milestones, regional focus).\n   - Extract the key requirements from each answer (e.g., focus on overall industry-wide AI adoption, global trends, additional investigation of milestones/events).\n\n3. Extraction of Key Requirements\n   - Identify the common themes and priorities from both the initial query and the follow-up Q&A.\n   - Clearly define the main research objectives, such as:\n     - Analyzing the industry-wide adoption of AI technologies.\n     - Examining global trends in AI.\n     - Investigating key milestones and events within the specified time frame.\n\n4. Writing the Research Objectives\n   - Consolidate the extracted information into a clear, concise objective statement.\n   - Ensure that the objective statement includes:\n     - The overall research direction.\n     - Specific analysis targets.\n     - The relevant time frame.\n     - Any additional items requiring further investigation.\n   - Example Objective:\n     \"To produce a 3-year AI trend report that analyzes the industry-wide adoption of AI technologies, examines global trends, and conducts an in-depth investigation of key milestones and events during the specified period.\"\n\n5. Additional Considerations\n   - Integrate any extra user requirements or constraints (e.g., emphasis on certain fields, regional limitations) into the objective.\n   - Optionally, outline further steps for the research process, including data collection methods, analysis techniques, and relevant literature reviews.\n\nBy following these steps, your response will precisely capture the user's needs, set a clear direction for deep research, and ensure a high standard of expert analysis."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        800,
+        40
+      ],
+      "id": "6e55e6de-7696-43bd-b4ce-d12d0fc46549",
+      "name": "Generate Research Objective"
+    },
+    {
+      "parameters": {
+        "tableId": "deepResearch",
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "objective",
+              "fieldValue": "={{ $json.query }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        1720,
+        -120
+      ],
+      "id": "94acc8c7-0f18-4d47-b77a-47c03571f056",
+      "name": "Supabase",
+      "credentials": {
+        "supabaseApi": {
+          "id": "szYmmRGq5qpTXmej",
+          "name": "Supabase account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "59d98459-1213-4e84-a1e7-c4259775e7d4",
+              "name": "learnings",
+              "value": "={{ $json.learnings }}",
+              "type": "array"
+            },
+            {
+              "id": "bee1177f-560b-478d-94e0-5854dc3fabfd",
+              "name": "visitedUrls",
+              "value": "={{ $json.visitedUrls }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2920,
+        -120
+      ],
+      "id": "f8c94131-e276-4971-a6df-b40c705b8b5e",
+      "name": "Save leanring and visitedUrls"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "numberInputs": 3,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        3940,
+        -120
+      ],
+      "id": "fb1b2d09-b363-4e61-ab17-e09d15a86190",
+      "name": "Merge5"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        1440,
+        400
+      ],
+      "id": "44186269-5080-42a4-8026-5bb1ff8c3812",
+      "name": "Merge6"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4218d766-1eb8-4861-987f-1884336073ac",
+              "name": "query",
+              "value": "=Objective:\n- {{ $json.output.objective }}\n\nResearch Scope:\n{{ $json.output.additional_explanation.research_scope.hasField('time') ? `- ${$json.output.additional_explanation.research_scope.time}` : \"\" }}\n- {{ $json.output.additional_explanation.research_scope.subject }}\n\nAnalysis Direction:\n{{ $json.output.additional_explanation.analysis_direction.map(item => `- ${item}`).join('\\n') }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1220,
+        40
+      ],
+      "id": "7d4bf71e-1c69-4acc-9a08-ddb1304e779b",
+      "name": "Set Research Objective"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "tableId": "deepResearch",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        },
+        "fieldsUi": {
+          "fieldValues": [
+            {
+              "fieldId": "learnings",
+              "fieldValue": "={{ $json.learnings }}"
+            },
+            {
+              "fieldId": "urls",
+              "fieldValue": "={{ $json.visitedUrls }}"
+            },
+            {
+              "fieldId": "report",
+              "fieldValue": "={{ $json.html.replaceAll('\\n','') }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        4140,
+        -120
+      ],
+      "id": "a8911f30-4b6b-4197-a393-32ea5b9aa2c0",
+      "name": "Supabase1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "szYmmRGq5qpTXmej",
+          "name": "Supabase account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b8a18483-7ed4-4eaa-a6b9-2f6b63f5ecbc",
+              "name": "id",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        3000,
+        -300
+      ],
+      "id": "36524090-60bd-4b76-bf5f-86c4f477eba9",
+      "name": "Set deep research ID"
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Set INPUT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Feedback",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Generate Research Objective",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Init research params",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Feedback",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set INPUT": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Feedback": {
+      "main": [
+        [
+          {
+            "node": "Set Feedback OUTPUT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Feedback",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Init research params": {
+      "main": [
+        [
+          {
+            "node": "Merge6",
+            "type": "main",
+            "index": 1
+          },
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "generateSerpQueries",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "generateSerpQueries",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Auto-fixing Output Parser1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "generateSerpQueries": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "DeepResearch": {
+      "main": [
+        [
+          {
+            "node": "generateSerpQueries",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Firecrawl",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update breadth and depth",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Firecrawl": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run DeepResearch": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update breadth and depth": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model5": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Learnings & F/U Questions",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Learnings & F/U Questions": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ],
+        []
+      ]
+    },
+    "Auto-fixing Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Generate Learnings & F/U Questions",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model6": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Auto-fixing Output Parser2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser2",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Update visitedUrls",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Set search result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set search result": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update visitedUrls": {
+      "main": [
+        [
+          {
+            "node": "Generate Learnings & F/U Questions",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update learnings": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "Update learnings",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Set next query",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Set research output",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Run DeepResearch recursively": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set next query": {
+      "main": [
+        [
+          {
+            "node": "Run DeepResearch recursively",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set research output": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "Merge3",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model7": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "writeFinalReport",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge3": {
+      "main": [
+        [
+          {
+            "node": "writeFinalReport",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Set URLs to link",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Save leanring and visitedUrls",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser3": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "writeFinalReport",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model8": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Auto-fixing Output Parser3",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser3": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser3",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "writeFinalReport": {
+      "main": [
+        [
+          {
+            "node": "Markdown",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Markdown": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "HTML": {
+      "main": [
+        [
+          {
+            "node": "Merge5",
+            "type": "main",
+            "index": 2
+          }
+        ]
+      ]
+    },
+    "Merge4": {
+      "main": [
+        [
+          {
+            "node": "HTML",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set URLs to link": {
+      "main": [
+        [
+          {
+            "node": "Merge4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Feedback OUTPUT": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser4": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Generate Research Objective",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model9": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate Research Objective",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate Research Objective": {
+      "main": [
+        [
+          {
+            "node": "Set Research Objective",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Set deep research ID",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Save leanring and visitedUrls": {
+      "main": [
+        [
+          {
+            "node": "Merge5",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge5": {
+      "main": [
+        [
+          {
+            "node": "Supabase1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge6": {
+      "main": [
+        [
+          {
+            "node": "Run DeepResearch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Research Objective": {
+      "main": [
+        [
+          {
+            "node": "Supabase",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Merge6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase1": {
+      "main": [
+        []
+      ]
+    },
+    "Set deep research ID": {
+      "main": [
+        [
+          {
+            "node": "Merge5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "5a36373beb0bd07f97802427cf7f6400b51faeab803c5aaafef56afd9000784e"
+  }
+}
