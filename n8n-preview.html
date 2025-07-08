@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>n8n Workflow JSON to Demo Converter (Fixed)</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@2.0.0/webcomponents-loader.js"></script>
+    <script src="https://www.unpkg.com/lit@2.0.0-rc.2/polyfill-support.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/@n8n_io/n8n-demo-component@latest/n8n-demo.bundled.js"></script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-bold text-gray-900 mb-2">
+                    <i class="fas fa-code-branch text-blue-600"></i>
+                    n8n Workflow JSON to Demo Converter
+                </h1>
+                <p class="text-gray-600 text-lg">
+                    n8n workflow JSON을 인터랙티브한 데모로 변환하세요 (표현식 이슈 해결)
+                </p>
+            </div>
+
+            <!-- Alert Info -->
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <div class="flex items-center">
+                    <i class="fas fa-info-circle text-blue-600 mr-2"></i>
+                    <span class="text-blue-800">
+                        <strong>해결된 이슈:</strong> 표현식(expression)이 포함된 워크플로우도 이제 정상적으로 미리보기됩니다.
+                    </span>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                <!-- Input Section -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-file-code text-green-600 mr-2"></i>
+                        JSON 입력
+                    </h2>
+                    <textarea
+                        id="jsonInput"
+                        class="w-full h-64 p-3 border border-gray-300 rounded-md font-mono text-sm resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="n8n workflow JSON을 여기에 붙여넣으세요..."
+                    ></textarea>
+                    
+                    <div class="mt-4 flex gap-2">
+                        <button
+                            id="convertBtn"
+                            class="flex-1 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                        >
+                            <i class="fas fa-exchange-alt mr-2"></i>
+                            변환하기
+                        </button>
+                        <button
+                            id="clearBtn"
+                            class="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
+                        >
+                            <i class="fas fa-trash mr-2"></i>
+                            초기화
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Output Section -->
+                <div class="bg-white rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-code text-purple-600 mr-2"></i>
+                        n8n-demo 태그
+                    </h2>
+                    <div class="relative">
+                        <pre id="output" class="bg-gray-100 p-3 rounded-md text-sm overflow-x-auto h-64 whitespace-pre-wrap">변환된 결과가 여기에 표시됩니다...</pre>
+                        <button
+                            id="copyBtn"
+                            class="absolute top-2 right-2 bg-gray-800 text-white px-3 py-1 rounded-md text-xs hover:bg-gray-700 transition-colors"
+                            style="display: none;"
+                        >
+                            <i class="fas fa-copy mr-1"></i>
+                            복사
+                        </button>
+                    </div>
+                    
+                    <div class="mt-4">
+                        <label class="flex items-center">
+                            <input type="checkbox" id="frameOption" class="mr-2" checked>
+                            <span class="text-sm text-gray-600">프레임 표시 (frame="true")</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview Section -->
+            <div class="bg-white rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-semibold mb-4 flex items-center">
+                    <i class="fas fa-eye text-indigo-600 mr-2"></i>
+                    미리보기
+                </h2>
+                <div id="preview" class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 min-h-96">
+                    워크플로우를 변환하면 여기에 미리보기가 표시됩니다
+                </div>
+            </div>
+
+            <!-- Examples Section -->
+            <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+                <h2 class="text-xl font-semibold mb-4 flex items-center">
+                    <i class="fas fa-lightbulb text-yellow-600 mr-2"></i>
+                    예시 템플릿
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button id="exampleBtn1" class="text-left p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                        <h3 class="font-semibold text-gray-800 mb-2">기본 HTTP 요청</h3>
+                        <p class="text-sm text-gray-600">Manual Trigger → HTTP Request 워크플로우</p>
+                    </button>
+                    <button id="exampleBtn2" class="text-left p-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                        <h3 class="font-semibold text-gray-800 mb-2">표현식 포함 예시</h3>
+                        <p class="text-sm text-gray-600">표현식이 포함된 복잡한 워크플로우</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center mt-8 text-gray-500">
+                <p>Made with <i class="fas fa-heart text-red-500"></i> for n8n Community</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Example workflows
+        const examples = {
+            basic: {
+                "nodes": [
+                    {
+                        "parameters": {},
+                        "type": "n8n-nodes-base.manualTrigger",
+                        "typeVersion": 1,
+                        "position": [240, 300],
+                        "id": "1",
+                        "name": "Manual Trigger"
+                    },
+                    {
+                        "parameters": {
+                            "url": "https://api.github.com/repos/n8n-io/n8n",
+                            "options": {}
+                        },
+                        "type": "n8n-nodes-base.httpRequest",
+                        "typeVersion": 4.2,
+                        "position": [460, 300],
+                        "id": "2",
+                        "name": "HTTP Request"
+                    }
+                ],
+                "connections": {
+                    "Manual Trigger": {
+                        "main": [
+                            [
+                                {
+                                    "node": "HTTP Request",
+                                    "type": "main",
+                                    "index": 0
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "pinData": {}
+            },
+            expression: {
+                "nodes": [
+                    {
+                        "parameters": {},
+                        "type": "n8n-nodes-base.manualTrigger",
+                        "typeVersion": 1,
+                        "position": [0, 0],
+                        "id": "1",
+                        "name": "When clicking 'Test workflow'"
+                    },
+                    {
+                        "parameters": {
+                            "assignments": {
+                                "assignments": [
+                                    {
+                                        "id": "1",
+                                        "name": "url",
+                                        "value": "https://google.com",
+                                        "type": "string"
+                                    },
+                                    {
+                                        "id": "2",
+                                        "name": "q",
+                                        "value": "google+new+bmw",
+                                        "type": "string"
+                                    }
+                                ]
+                            }
+                        },
+                        "type": "n8n-nodes-base.set",
+                        "typeVersion": 3.4,
+                        "position": [220, 0],
+                        "id": "2",
+                        "name": "Edit Fields"
+                    },
+                    {
+                        "parameters": {
+                            "url": "={{ $json.url }}",
+                            "sendQuery": true,
+                            "queryParameters": {
+                                "parameters": [
+                                    {
+                                        "name": "q",
+                                        "value": "={{ $('Edit Fields').item.json.q }}"
+                                    }
+                                ]
+                            }
+                        },
+                        "type": "n8n-nodes-base.httpRequest",
+                        "typeVersion": 4.2,
+                        "position": [440, 0],
+                        "id": "3",
+                        "name": "HTTP Request"
+                    }
+                ],
+                "connections": {
+                    "When clicking 'Test workflow'": {
+                        "main": [
+                            [
+                                {
+                                    "node": "Edit Fields",
+                                    "type": "main",
+                                    "index": 0
+                                }
+                            ]
+                        ]
+                    },
+                    "Edit Fields": {
+                        "main": [
+                            [
+                                {
+                                    "node": "HTTP Request",
+                                    "type": "main",
+                                    "index": 0
+                                }
+                            ]
+                        ]
+                    }
+                },
+                "pinData": {}
+            }
+        };
+
+        // DOM elements
+        const jsonInput = document.getElementById('jsonInput');
+        const output = document.getElementById('output');
+        const preview = document.getElementById('preview');
+        const convertBtn = document.getElementById('convertBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const copyBtn = document.getElementById('copyBtn');
+        const frameOption = document.getElementById('frameOption');
+        const exampleBtn1 = document.getElementById('exampleBtn1');
+        const exampleBtn2 = document.getElementById('exampleBtn2');
+
+        // Convert function
+        function convertWorkflow() {
+            const input = jsonInput.value.trim();
+            if (!input) {
+                alert('JSON을 입력해주세요.');
+                return;
+            }
+
+            try {
+                // Validate JSON
+                const workflow = JSON.parse(input);
+                
+                // URL encode the JSON
+                const encodedWorkflow = encodeURIComponent(JSON.stringify(workflow));
+                
+                // Generate n8n-demo tag
+                const frameAttr = frameOption.checked ? ' frame="true"' : '';
+                const demoTag = `<n8n-demo workflow="${encodedWorkflow}"${frameAttr}></n8n-demo>`;
+                
+                // Display result
+                output.textContent = demoTag;
+                copyBtn.style.display = 'block';
+                
+                // Update preview
+                updatePreview(workflow, frameOption.checked);
+                
+            } catch (error) {
+                alert('유효하지 않은 JSON입니다: ' + error.message);
+            }
+        }
+
+        // Update preview
+        function updatePreview(workflow, frame) {
+            const existingDemo = preview.querySelector('n8n-demo');
+            if (existingDemo) {
+                existingDemo.remove();
+            }
+
+            const demoElement = document.createElement('n8n-demo');
+            demoElement.setAttribute('workflow', JSON.stringify(workflow));
+            if (frame) {
+                demoElement.setAttribute('frame', 'true');
+            }
+            
+            preview.innerHTML = '';
+            preview.appendChild(demoElement);
+        }
+
+        // Copy to clipboard
+        function copyToClipboard() {
+            const text = output.textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fas fa-check mr-1"></i>복사됨';
+                copyBtn.classList.add('bg-green-600');
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                    copyBtn.classList.remove('bg-green-600');
+                }, 2000);
+            });
+        }
+
+        // Clear inputs
+        function clearInputs() {
+            jsonInput.value = '';
+            output.textContent = '변환된 결과가 여기에 표시됩니다...';
+            copyBtn.style.display = 'none';
+            preview.innerHTML = '<div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center text-gray-500 min-h-96">워크플로우를 변환하면 여기에 미리보기가 표시됩니다</div>';
+        }
+
+        // Load example
+        function loadExample(exampleKey) {
+            jsonInput.value = JSON.stringify(examples[exampleKey], null, 2);
+            convertWorkflow();
+        }
+
+        // Event listeners
+        convertBtn.addEventListener('click', convertWorkflow);
+        clearBtn.addEventListener('click', clearInputs);
+        copyBtn.addEventListener('click', copyToClipboard);
+        frameOption.addEventListener('change', () => {
+            if (jsonInput.value.trim()) {
+                convertWorkflow();
+            }
+        });
+
+        exampleBtn1.addEventListener('click', () => loadExample('basic'));
+        exampleBtn2.addEventListener('click', () => loadExample('expression'));
+
+        // Auto-convert on input change (with debounce)
+        let debounceTimer;
+        jsonInput.addEventListener('input', () => {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                if (jsonInput.value.trim()) {
+                    convertWorkflow();
+                }
+            }, 500);
+        });
+
+        // Initial example load
+        loadExample('basic');
+    </script>
+</body>
+</html>
