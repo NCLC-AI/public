@@ -1,0 +1,172 @@
+{
+  "createdAt": "2025-07-21T12:12:23.733Z",
+  "updatedAt": "2025-07-21T12:16:17.000Z",
+  "id": "YK2dabUXYS0VMdmb",
+  "name": "inbound",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "path": "obsidian-inbound",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -304,
+        -48
+      ],
+      "id": "8ce65b83-abd7-4703-9e35-9eef5ad701e2",
+      "name": "Webhook",
+      "webhookId": "1fec1fce-0ecf-4dd3-b37f-7f91694d205a"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "documents",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        384,
+        -48
+      ],
+      "id": "0cc57e96-3dc0-46e1-a876-d22bd97b7423",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f10c36f3-37e5-4c97-aede-5be3de245f67",
+              "name": "filename",
+              "value": "={{ $json.filename }}",
+              "type": "string"
+            },
+            {
+              "id": "a2364e1c-259e-4477-9024-8faae3613693",
+              "name": "content",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            },
+            {
+              "id": "3a43974d-fbe1-4381-a0f6-1705e28b0051",
+              "name": "filepath",
+              "value": "={{ $json.filepath }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        160,
+        -48
+      ],
+      "id": "07f1be87-9822-4955-a6b9-d28720aa2c4c",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        640,
+        -48
+      ],
+      "id": "765e5601-8c43-4ff5-ab64-b89ca6fccaa0",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "obsidian_notes",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        -64,
+        -48
+      ],
+      "id": "28935eab-b054-4130-971f-e4edb2bb5c9b",
+      "name": "Get many rows",
+      "credentials": {
+        "supabaseApi": {
+          "id": "QFxybPw57g45NIOT",
+          "name": "Supabase account - n8n"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Get many rows",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many rows": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "58ec1134-fd22-4a44-a868-35a10ae51f96",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2025-07-20T15:27:51.162Z",
+      "updatedAt": "2025-07-20T15:27:51.162Z",
+      "id": "XZGVwZDi61WSZ5YP",
+      "name": "obsidian-all-sync"
+    }
+  ]
+}
