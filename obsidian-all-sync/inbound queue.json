@@ -1,0 +1,208 @@
+{
+  "createdAt": "2025-07-19T09:29:18.076Z",
+  "updatedAt": "2025-07-21T12:13:53.000Z",
+  "id": "Q6TmiQjbHFsxxyEX",
+  "name": "inbound queue",
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "path": "obsidian-inbound-queue",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -80,
+        -224
+      ],
+      "id": "7cb307ff-aedd-44ef-82bd-db3ef27dfcca",
+      "name": "Webhook",
+      "webhookId": "1fec1fce-0ecf-4dd3-b37f-7f91694d205a"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "tableId": "inbound_queue",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        160,
+        -224
+      ],
+      "id": "75973546-a635-4a1f-91c6-eb1e4c639d66",
+      "name": "Supabase",
+      "credentials": {
+        "supabaseApi": {
+          "id": "QFxybPw57g45NIOT",
+          "name": "Supabase account - n8n"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "documents",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        608,
+        -224
+      ],
+      "id": "f4fe7515-3749-4f2b-984c-588067b1ece7",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f10c36f3-37e5-4c97-aede-5be3de245f67",
+              "name": "filename",
+              "value": "={{ $json.filename }}",
+              "type": "string"
+            },
+            {
+              "id": "a2364e1c-259e-4477-9024-8faae3613693",
+              "name": "content",
+              "value": "={{ $json.content }}",
+              "type": "string"
+            },
+            {
+              "id": "3a43974d-fbe1-4381-a0f6-1705e28b0051",
+              "name": "path",
+              "value": "={{ $json.path }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        384,
+        -224
+      ],
+      "id": "004faf43-36fd-4e39-b20b-dab6e1e3e091",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.4,
+      "position": [
+        864,
+        -224
+      ],
+      "id": "fcbf1c0f-9745-4f4a-b537-b28b739dbab0",
+      "name": "Respond to Webhook1"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "tableId": "inbound_queue",
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "id",
+              "condition": "eq",
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.supabase",
+      "typeVersion": 1,
+      "position": [
+        384,
+        0
+      ],
+      "id": "72fc0740-ec05-43c2-a988-b60c0fef4a8c",
+      "name": "Supabase1",
+      "credentials": {
+        "supabaseApi": {
+          "id": "QFxybPw57g45NIOT",
+          "name": "Supabase account - n8n"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Supabase",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Supabase": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Supabase1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "03f7da9b-c23e-4ae6-b1df-41f4a52e534d",
+  "triggerCount": 1,
+  "tags": [
+    {
+      "createdAt": "2025-07-20T15:27:51.162Z",
+      "updatedAt": "2025-07-20T15:27:51.162Z",
+      "id": "XZGVwZDi61WSZ5YP",
+      "name": "obsidian-all-sync"
+    }
+  ]
+}
